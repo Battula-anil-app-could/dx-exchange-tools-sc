@@ -1,0 +1,13 @@
+[package]
+name = "auto-farm-meta"
+version = "0.0.0"
+edition = "2018"
+publish = false
+authors = ["you"]
+
+[dev-dependencies]
+[dependencies.auto-farm]
+path = ".."
+
+[dependencies.dharitri-sc-meta]
+version = "0.0.1"

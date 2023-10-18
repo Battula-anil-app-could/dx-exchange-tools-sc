@@ -1,0 +1,17 @@
+[package]
+name = "locked-token-pos-creator-meta"
+version = "0.0.0"
+edition = "2018"
+publish = false
+authors = [ "you",]
+
+[dev-dependencies]
+
+[dependencies.locked-token-pos-creator]
+path = ".."
+
+[dependencies.dharitri-sc-modules]
+version = "=0.0.1"
+
+[dependencies.dharitri-sc-meta]
+version = "=0.0.1"

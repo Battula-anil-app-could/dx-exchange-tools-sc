@@ -1,0 +1,113 @@
+[package]
+name = "energy-dao"
+version = "0.0.0"
+authors = ["you"]
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+[dependencies.dharitri-sc]
+version = "=0.0.1"
+features = ["dct-token-payment-legacy-decode"]
+
+[dependencies.dharitri-sc-modules]
+version = "=0.0.1"
+
+[dependencies.farm]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.farm-with-locked-rewards]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.farm-staking]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.farm-staking-proxy]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.pair]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.energy-factory]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.fees-collector]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.locked-token-wrapper]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.simple-lock]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.permissions_module]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.common_structs]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.mergeable]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.pausable]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.utils]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.sc_whitelist_module]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.token_send]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.farm_token]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.locking_module]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.config]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.energy-query]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.farm-boosted-yields]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.legacy_token_decode_module]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dependencies.lkmex-transfer]
+git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+
+
+[dev-dependencies]
+num-bigint = "0.4.2"
+
+[dev-dependencies.dharitri-sc-scenario]
+version = "=0.0.1"
