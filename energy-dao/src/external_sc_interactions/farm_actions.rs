@@ -6,19 +6,13 @@ use farm::{
 };
 use locked_token_wrapper::wrapped_token;
 
-use crate::common::{
-    rewards_wrapper::RewardsWrapper,
-    structs::{FarmState, WrappedFarmTokenAttributes},
-};
-
-pub const MAX_PERCENT: u64 = 10_000;
+use super::farm_config::{FarmState, WrappedFarmTokenAttributes, MAX_PERCENT};
 
 #[dharitri_sc::module]
 pub trait FarmActionsModule:
-    crate::external_sc_interactions::energy_dao_config::EnergyDAOConfigModule
+    crate::external_sc_interactions::farm_config::FarmConfigModule
     + crate::external_sc_interactions::locked_token_actions::LockedTokenModule
     + utils::UtilsModule
-    + permissions_module::PermissionsModule
     + energy_query::EnergyQueryModule
     + lkmex_transfer::energy_transfer::EnergyTransferModule
     + legacy_token_decode_module::LegacyTokenDecodeModule
@@ -43,7 +37,10 @@ pub trait FarmActionsModule:
         farm_tokens: DctTokenPayment,
     ) -> ExitFarmWithPartialPosResultType<Self::Api> {
         self.farm_proxy(farm_address)
-            .exit_farm_endpoint(OptionalValue::<ManagedAddress>::None)
+            .exit_farm_endpoint(
+                farm_tokens.amount.clone(),
+                OptionalValue::<ManagedAddress>::None,
+            )
             .with_dct_transfer(farm_tokens)
             .execute_on_dest_context()
     }
@@ -59,44 +56,11 @@ pub trait FarmActionsModule:
             .execute_on_dest_context()
     }
 
-    fn claim_and_update_farm_state(
-        &self,
-        farm_address: &ManagedAddress,
-        farm_state_mapper: &mut SingleValueMapper<FarmState<Self::Api>>,
-    ) {
-        if farm_state_mapper.is_empty() {
-            return;
-        }
-        let farm_state = farm_state_mapper.get();
-        if farm_state.farm_staked_value == 0 {
-            return;
-        }
-
-        let division_safety_constant = self.get_division_safety_constant(farm_address);
-        let farm_token_id = self.get_farm_token(farm_address);
-        let current_farm_position = DctTokenPayment::new(
-            farm_token_id,
-            farm_state.farm_token_nonce,
-            farm_state.farm_staked_value.clone(),
-        );
-        let claim_rewards_result =
-            self.call_farm_claim(farm_address.clone(), current_farm_position);
-        let (new_farm_token, farm_rewards) = claim_rewards_result.into_tuple();
-
-        self.update_farm_after_claim(
-            &farm_state,
-            farm_state_mapper,
-            &new_farm_token,
-            farm_rewards,
-            &division_safety_constant,
-        );
-    }
-
     fn update_farm_after_claim(
         &self,
         initial_farm_state: &FarmState<Self::Api>,
         farm_state_mapper: &mut SingleValueMapper<FarmState<Self::Api>>,
-        new_farm_token: &DctTokenPayment,
+        new_farm_token: DctTokenPayment,
         farm_rewards: DctTokenPayment,
         division_safety_constant: &BigUint,
     ) {
@@ -150,28 +114,22 @@ pub trait FarmActionsModule:
     }
 
     fn apply_fee(&self, payment: &mut DctTokenPayment) {
-        let penalty_percent = self.exit_penalty_percent().get();
+        let penalty_percent = self.penalty_percent().get();
         let calculated_fee = &payment.amount * penalty_percent / MAX_PERCENT;
 
-        let exit_fees_mapper = self.user_exit_fees();
+        let exit_fees_mapper = self.exit_fees();
         if exit_fees_mapper.is_empty() {
             let new_fee = DctTokenPayment::new(
                 payment.token_identifier.clone(),
                 payment.token_nonce,
                 calculated_fee.clone(),
             );
-            let locked_token_id = self.get_locked_token_id();
-            let mut fees = RewardsWrapper::new(locked_token_id);
-            fees.add_tokens(new_fee);
-            exit_fees_mapper.set(fees);
+            exit_fees_mapper.set(new_fee);
         } else {
             exit_fees_mapper.update(|fees| {
-                let new_fee = DctTokenPayment::new(
-                    payment.token_identifier.clone(),
-                    payment.token_nonce,
-                    calculated_fee.clone(),
-                );
-                fees.add_tokens(new_fee);
+                if fees.token_identifier == payment.token_identifier {
+                    fees.amount += &calculated_fee;
+                }
             });
         }
         payment.amount -= calculated_fee;
@@ -184,14 +142,6 @@ pub trait FarmActionsModule:
         division_safety_constant: &BigUint,
     ) -> DctTokenPayment {
         let farm_state = farm_state_mapper.get();
-        let locked_token_id = self.get_locked_token_id();
-        if payment.amount == 0u64 {
-            return DctTokenPayment::new(
-                locked_token_id,
-                farm_state.reward_token_nonce,
-                BigUint::zero(),
-            );
-        }
         let token_attributes: WrappedFarmTokenAttributes<Self::Api> =
             self.get_token_attributes(&payment.token_identifier, payment.token_nonce);
         let token_rps = token_attributes.token_rps;
@@ -201,7 +151,7 @@ pub trait FarmActionsModule:
         } else {
             BigUint::zero()
         };
-
+        let locked_token_id = self.get_locked_token_id();
         DctTokenPayment::new(locked_token_id, farm_state.reward_token_nonce, reward)
     }
 

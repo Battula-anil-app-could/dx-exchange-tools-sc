@@ -9,8 +9,7 @@ use auto_farm::whitelists::{
 use auto_pos_creator::{configs::pairs_config::PairsConfigModule, AutoPosCreator};
 use dharitri_sc::types::{ManagedVec, MultiValueEncoded};
 use dharitri_sc_scenario::{
-    managed_address, managed_biguint, managed_token_id, rust_biguint,
-    testing_framework::ContractObjWrapper, DebugApi,
+    managed_address, managed_biguint, rust_biguint, testing_framework::ContractObjWrapper, DebugApi,
 };
 use sc_whitelist_module::SCWhitelistModule;
 use tests_common::{
@@ -18,11 +17,11 @@ use tests_common::{
     farm_with_locked_rewards_setup::{FarmSetup, FARMING_TOKEN_ID, FARM_TOKEN_ID},
 };
 
+use pair::safe_price::PriceObservation;
 use pair::safe_price::SafePriceModule;
 
 pub static TOKEN_IDS: &[&[u8]] = &[b"FIRST-123456", b"SECOND-123456", b"THIRD-123456"];
 pub static LP_TOKEN_IDS: &[&[u8]] = &[FARMING_TOKEN_ID[0], FARMING_TOKEN_ID[1], b"LPTHIRD-123456"];
-pub static WMOAX_TOKEN_ID: &[u8] = b"WMOAX-123456";
 
 pub struct PosCreatorSetup<
     FarmBuilder,
@@ -154,19 +153,13 @@ where
             &rust_biguint!(third_token_total_amount),
         );
 
-        let mut block_round: u64 = 1;
-        b_mock.borrow_mut().set_block_round(block_round);
-
         // add initial liquidity
         first_pair_setup.add_liquidity(&owner, 1_000_000_000, 2_000_000_000);
         second_pair_setup.add_liquidity(&owner, 1_000_000_000, 6_000_000_000);
         third_pair_setup.add_liquidity(&owner, 1_000_000_000, 3_000_000_000);
 
         // setup price observations
-        for _i in 1usize..=20 {
-            block_round += 1;
-            b_mock.borrow_mut().set_block_round(block_round);
-
+        for i in 1usize..=20 {
             b_mock
                 .borrow_mut()
                 .execute_tx(
@@ -174,10 +167,13 @@ where
                     &first_pair_setup.pair_wrapper,
                     &rust_biguint!(0),
                     |sc| {
-                        sc.update_safe_price(
-                            &managed_biguint!(1_000_000_000),
-                            &managed_biguint!(2_000_000_000),
-                        );
+                        sc.price_observations().push(&PriceObservation {
+                            first_token_reserve_accumulated: managed_biguint!(1_000_000_000),
+                            second_token_reserve_accumulated: managed_biguint!(2_000_000_000),
+                            weight_accumulated: 0,
+                            recording_round: 0,
+                        });
+                        sc.safe_price_current_index().set(i);
                     },
                 )
                 .assert_ok();
@@ -189,10 +185,13 @@ where
                     &second_pair_setup.pair_wrapper,
                     &rust_biguint!(0),
                     |sc| {
-                        sc.update_safe_price(
-                            &managed_biguint!(1_000_000_000),
-                            &managed_biguint!(6_000_000_000),
-                        );
+                        sc.price_observations().push(&PriceObservation {
+                            first_token_reserve_accumulated: managed_biguint!(1_000_000_000),
+                            second_token_reserve_accumulated: managed_biguint!(6_000_000_000),
+                            weight_accumulated: 0,
+                            recording_round: 0,
+                        });
+                        sc.safe_price_current_index().set(i);
                     },
                 )
                 .assert_ok();
@@ -204,10 +203,13 @@ where
                     &third_pair_setup.pair_wrapper,
                     &rust_biguint!(0),
                     |sc| {
-                        sc.update_safe_price(
-                            &managed_biguint!(1_000_000_000),
-                            &managed_biguint!(3_000_000_000),
-                        );
+                        sc.price_observations().push(&PriceObservation {
+                            first_token_reserve_accumulated: managed_biguint!(1_000_000_000),
+                            second_token_reserve_accumulated: managed_biguint!(3_000_000_000),
+                            weight_accumulated: 0,
+                            recording_round: 0,
+                        });
+                        sc.safe_price_current_index().set(i);
                     },
                 )
                 .assert_ok();
@@ -235,6 +237,29 @@ where
             LP_TOKEN_IDS[0],
         );
 
+        // setup auto farm SC - only the storage so we can read it from auto pos creator
+        let auto_farm_wrapper = b_mock.borrow_mut().create_sc_account(
+            &rust_biguint!(0),
+            Some(&owner),
+            auto_farm::contract_obj,
+            "auto farm",
+        );
+
+        b_mock
+            .borrow_mut()
+            .execute_tx(&owner, &auto_farm_wrapper, &rust_biguint!(0), |sc| {
+                let mut farms = MultiValueEncoded::new();
+                farms.push(managed_address!(farm_setup.farm_wrappers[0].address_ref()));
+                farms.push(managed_address!(farm_setup.farm_wrappers[1].address_ref()));
+                farms.push(managed_address!(fs_wrapper.address_ref()));
+
+                sc.add_farms(farms);
+                sc.add_metastaking_scs(
+                    ManagedVec::from_single_item(managed_address!(ms_wrapper.address_ref())).into(),
+                );
+            })
+            .assert_ok();
+
         // setup auto pos creator sc
         let pos_creator_wrapper = b_mock.borrow_mut().create_sc_account(
             &rust_biguint!(0),
@@ -246,20 +271,7 @@ where
         b_mock
             .borrow_mut()
             .execute_tx(&owner, &pos_creator_wrapper, &rust_biguint!(0), |sc| {
-                sc.init(
-                    managed_address!(pos_creator_wrapper.address_ref()), // unused
-                    managed_token_id!(WMOAX_TOKEN_ID),
-                );
-
-                let mut farms = MultiValueEncoded::new();
-                farms.push(managed_address!(farm_setup.farm_wrappers[0].address_ref()));
-                farms.push(managed_address!(farm_setup.farm_wrappers[1].address_ref()));
-                farms.push(managed_address!(fs_wrapper.address_ref()));
-
-                sc.add_farms(farms);
-                sc.add_metastaking_scs(
-                    ManagedVec::from_single_item(managed_address!(ms_wrapper.address_ref())).into(),
-                );
+                sc.init(managed_address!(auto_farm_wrapper.address_ref()));
 
                 let mut pairs = MultiValueEncoded::new();
                 pairs.push(managed_address!(first_pair_setup

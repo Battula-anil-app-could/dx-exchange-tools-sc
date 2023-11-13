@@ -22,4 +22,4 @@ panic = "abort"
 path = ".."
 
 [dependencies.dharitri-sc-wasm-adapter]
-version = "=0.0.1"
+version = "=0.1.5"

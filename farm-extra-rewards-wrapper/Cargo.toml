@@ -9,68 +9,68 @@ publish = false
 path = "src/lib.rs"
 
 [dependencies.farm]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm-with-locked-rewards]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.config]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm_token]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.rewards]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.contexts]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm_base_impl]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.token_send]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.pausable]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.permissions_module]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.common_structs]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.fixed-supply-token]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.mergeable]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.unwrappable]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.math]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.utils]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.auto-farm]
 path = "../auto-farm"
@@ -86,19 +86,19 @@ hex = "0.4"
 hex-literal = "0.3.4"
 
 [dependencies.dharitri-sc]
-version = "=0.0.1"
+version = "=0.1.5"
 features = ["dct-token-payment-legacy-decode"]
 
 [dependencies.dharitri-sc-modules]
-version = "=0.0.1"
+version = "=0.1.5"
 
 [dev-dependencies.dharitri-sc-scenario]
-version = "=0.0.1"
+version = "=0.1.5"
 
 [dev-dependencies.energy-factory]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dev-dependencies.sc_whitelist_module]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"

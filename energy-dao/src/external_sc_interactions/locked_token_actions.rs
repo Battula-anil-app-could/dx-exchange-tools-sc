@@ -1,7 +1,8 @@
 dharitri_sc::imports!();
 
 use common_structs::{Epoch, PaymentsVec};
-use energy_factory::{token_merging::ProxyTrait as _, ProxyTrait as _};
+use energy_factory::token_merging::ProxyTrait as _;
+use energy_factory::ProxyTrait as _;
 
 #[dharitri_sc::module]
 pub trait LockedTokenModule: energy_query::EnergyQueryModule {

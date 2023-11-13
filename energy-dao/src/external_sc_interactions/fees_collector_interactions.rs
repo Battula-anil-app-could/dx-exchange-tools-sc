@@ -8,10 +8,9 @@ use crate::common::{rewards_wrapper::RewardsWrapper, unique_payments::UniquePaym
 #[dharitri_sc::module]
 pub trait FeesCollectorInteractionsModule:
     crate::external_sc_interactions::farm_actions::FarmActionsModule
-    + crate::external_sc_interactions::energy_dao_config::EnergyDAOConfigModule
+    + crate::external_sc_interactions::farm_config::FarmConfigModule
     + crate::external_sc_interactions::locked_token_actions::LockedTokenModule
     + utils::UtilsModule
-    + permissions_module::PermissionsModule
     + energy_query::EnergyQueryModule
     + lkmex_transfer::energy_transfer::EnergyTransferModule
     + legacy_token_decode_module::LegacyTokenDecodeModule
@@ -20,8 +19,8 @@ pub trait FeesCollectorInteractionsModule:
     + dharitri_sc_modules::default_issue_callbacks::DefaultIssueCallbacksModule
 {
     #[endpoint(claimFeesCollectorRewards)]
-    fn claim_fees_collector_rewards(&self) {
-        let mut rewards = self.call_fees_collector_claim();
+    fn claim_fees_collector_rewards(&self, user: &ManagedAddress) {
+        let mut rewards = self.call_fees_collector_claim(user.clone());
         let rewards_len = rewards.len();
         if rewards_len == 0 {
             return;
@@ -53,10 +52,10 @@ pub trait FeesCollectorInteractionsModule:
         collected_fees_mapper.set(new_collected_fees);
     }
 
-    fn call_fees_collector_claim(&self) -> PaymentsVec<Self::Api> {
+    fn call_fees_collector_claim(&self, user: ManagedAddress) -> PaymentsVec<Self::Api> {
         let sc_address = self.fees_collector_sc_address().get();
         self.fees_collector_proxy(sc_address)
-            .claim_rewards(OptionalValue::<ManagedAddress>::None)
+            .claim_rewards(user)
             .execute_on_dest_context()
     }
 

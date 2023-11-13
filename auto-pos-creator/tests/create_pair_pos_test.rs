@@ -2,11 +2,7 @@
 
 use auto_pos_creator::{
     external_sc_interactions::pair_actions::PairTokenPayments,
-    multi_contract_interactions::{
-        create_pos::{CreatePosModule, StepsToPerform},
-        create_pos_endpoints::CreatePosEndpointsModule,
-        exit_pos_endpoints::ExitPosEndpointsModule,
-    },
+    multi_contract_interactions::{create_pos::CreatePosModule, exit_pos::ExitPosModule},
 };
 use farm_staking::token_attributes::UnbondSftAttributes;
 use metastaking_setup::DUAL_YIELD_TOKEN_ID;
@@ -46,9 +42,9 @@ fn enter_lp_through_pos_creator_test() {
         farm_staking_proxy::contract_obj,
         auto_pos_creator::contract_obj,
     );
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
+    let b_mock = pos_creator_setup.farm_setup.b_mock.clone();
 
-    let user_addr = pos_creator_setup.farm_setup.first_user;
+    let user_addr = pos_creator_setup.farm_setup.first_user.clone();
     let user_first_token_balance = 200_000_000u64;
     b_mock.borrow_mut().set_dct_balance(
         &user_addr,
@@ -70,14 +66,7 @@ fn enter_lp_through_pos_creator_test() {
             0,
             &rust_biguint!(user_first_token_balance),
             |sc| {
-                let _ = sc.create_pos_from_single_token(
-                    managed_address!(&second_pair_addr),
-                    StepsToPerform::AddLiquidity,
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                );
+                let _ = sc.create_pos_from_single_token(managed_address!(&second_pair_addr));
             },
         )
         .assert_ok();
@@ -113,7 +102,7 @@ fn enter_lp_through_pos_creator_test() {
             0,
             &rust_biguint!(181_818_181),
             |sc| {
-                let _ = sc.full_exit_pos_endpoint(1u32.into(), 1u32.into());
+                let _ = sc.full_exit_pos();
             },
         )
         .assert_ok();
@@ -141,9 +130,9 @@ fn enter_lp_and_farm_through_pos_creator() {
         farm_staking_proxy::contract_obj,
         auto_pos_creator::contract_obj,
     );
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
+    let b_mock = pos_creator_setup.farm_setup.b_mock.clone();
 
-    let user_addr = pos_creator_setup.farm_setup.first_user;
+    let user_addr = pos_creator_setup.farm_setup.first_user.clone();
     let user_second_token_balance = 200_000_000u64;
     b_mock.borrow_mut().set_dct_balance(
         &user_addr,
@@ -165,14 +154,7 @@ fn enter_lp_and_farm_through_pos_creator() {
             0,
             &rust_biguint!(user_second_token_balance),
             |sc| {
-                let _ = sc.create_pos_from_single_token(
-                    managed_address!(&second_pair_addr),
-                    StepsToPerform::EnterFarm,
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                );
+                let _ = sc.create_pos_from_single_token(managed_address!(&second_pair_addr));
             },
         )
         .assert_ok();
@@ -218,7 +200,7 @@ fn enter_lp_and_farm_through_pos_creator() {
             1,
             &rust_biguint!(45_454_545),
             |sc| {
-                let _ = sc.full_exit_pos_endpoint(1u32.into(), 1u32.into());
+                let _ = sc.full_exit_pos();
             },
         )
         .assert_ok();
@@ -244,9 +226,9 @@ fn enter_lp_farm_and_metastaking_through_pos_creator_test() {
         farm_staking_proxy::contract_obj,
         auto_pos_creator::contract_obj,
     );
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
+    let b_mock = pos_creator_setup.farm_setup.b_mock.clone();
 
-    let user_addr = pos_creator_setup.farm_setup.first_user;
+    let user_addr = pos_creator_setup.farm_setup.first_user.clone();
     let user_third_token_balance = 200_000_000u64;
     b_mock.borrow_mut().set_dct_balance(
         &user_addr,
@@ -254,7 +236,7 @@ fn enter_lp_farm_and_metastaking_through_pos_creator_test() {
         &rust_biguint!(user_third_token_balance),
     );
 
-    b_mock.borrow_mut().set_block_round(21);
+    b_mock.borrow_mut().set_block_round(1);
 
     // enter pair and farm from C tokens
     let first_pair_addr = pos_creator_setup.pair_setups[0]
@@ -270,14 +252,7 @@ fn enter_lp_farm_and_metastaking_through_pos_creator_test() {
             0,
             &rust_biguint!(user_third_token_balance),
             |sc| {
-                let _ = sc.create_pos_from_single_token(
-                    managed_address!(&first_pair_addr),
-                    StepsToPerform::EnterMetastaking,
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                    1u32.into(),
-                );
+                let _ = sc.create_pos_from_single_token(managed_address!(&first_pair_addr));
             },
         )
         .assert_ok();
@@ -328,7 +303,7 @@ fn enter_lp_farm_and_metastaking_through_pos_creator_test() {
             1,
             &rust_biguint!(15_873_015),
             |sc| {
-                let _ = sc.full_exit_pos_endpoint(1u32.into(), 1u32.into());
+                let _ = sc.full_exit_pos();
             },
         )
         .assert_ok();
@@ -364,10 +339,10 @@ fn create_pos_from_two_tokens_balanced_ratio_test() {
         auto_pos_creator::contract_obj,
     );
 
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
+    let b_mock = pos_creator_setup.farm_setup.b_mock.clone();
 
     // ratio for first pair is A:B 1:2
-    let user_addr = pos_creator_setup.farm_setup.first_user;
+    let user_addr = pos_creator_setup.farm_setup.first_user.clone();
     let user_first_token_balance = 100_000_000u64;
     let user_second_token_balance = 200_000_000u64;
     b_mock.borrow_mut().set_dct_balance(
@@ -421,8 +396,6 @@ fn create_pos_from_two_tokens_balanced_ratio_test() {
                 sc.balance_token_amounts_through_swaps(
                     managed_address!(&first_pair_addr),
                     &mut pair_payments,
-                    1u32.into(),
-                    1u32.into(),
                 );
 
                 // check nothing changed
@@ -447,10 +420,10 @@ fn create_pos_from_two_tokens_wrong_ratio() {
         auto_pos_creator::contract_obj,
     );
 
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
+    let b_mock = pos_creator_setup.farm_setup.b_mock.clone();
 
     // ratio for first pair is A:B 1:2, try enter with 1:4 ratio
-    let user_addr = pos_creator_setup.farm_setup.first_user;
+    let user_addr = pos_creator_setup.farm_setup.first_user.clone();
     let user_first_token_balance = 100_000_000u64;
     let user_second_token_balance = 400_000_000u64;
     b_mock.borrow_mut().set_dct_balance(
@@ -504,8 +477,6 @@ fn create_pos_from_two_tokens_wrong_ratio() {
                 sc.balance_token_amounts_through_swaps(
                     managed_address!(&first_pair_addr),
                     &mut pair_payments,
-                    1u32.into(),
-                    1u32.into(),
                 );
 
                 // check part of tokens was swapped to fix the ratio
@@ -515,66 +486,4 @@ fn create_pos_from_two_tokens_wrong_ratio() {
             },
         )
         .assert_ok();
-}
-
-#[test]
-fn create_pos_from_lp_test() {
-    let mut pos_creator_setup = PosCreatorSetup::new(
-        farm_with_locked_rewards::contract_obj,
-        energy_factory::contract_obj,
-        pair::contract_obj,
-        farm_staking::contract_obj,
-        farm_staking_proxy::contract_obj,
-        auto_pos_creator::contract_obj,
-    );
-
-    let b_mock = pos_creator_setup.farm_setup.b_mock;
-
-    // ratio for first pair is A:B 1:2
-    let user_addr = pos_creator_setup.farm_setup.first_user;
-    let user_first_token_balance = 100_000_000u64;
-    let user_second_token_balance = 200_000_000u64;
-    b_mock.borrow_mut().set_dct_balance(
-        &user_addr,
-        TOKEN_IDS[0],
-        &rust_biguint!(user_first_token_balance),
-    );
-    b_mock.borrow_mut().set_dct_balance(
-        &user_addr,
-        TOKEN_IDS[1],
-        &rust_biguint!(user_second_token_balance),
-    );
-
-    pos_creator_setup.pair_setups[0].add_liquidity(
-        &user_addr,
-        user_first_token_balance,
-        user_second_token_balance,
-    );
-
-    let lp_balance = 100_000_000u32;
-    b_mock
-        .borrow()
-        .check_dct_balance(&user_addr, LP_TOKEN_IDS[0], &rust_biguint!(lp_balance));
-
-    b_mock
-        .borrow_mut()
-        .execute_dct_transfer(
-            &user_addr,
-            &pos_creator_setup.pos_creator_wrapper,
-            LP_TOKEN_IDS[0],
-            0,
-            &rust_biguint!(lp_balance),
-            |sc| {
-                sc.create_pos_from_lp(StepsToPerform::EnterMetastaking);
-            },
-        )
-        .assert_ok();
-
-    b_mock.borrow().check_nft_balance::<Empty>(
-        &user_addr,
-        DUAL_YIELD_TOKEN_ID,
-        1,
-        &rust_biguint!(90_909_090),
-        None,
-    );
 }

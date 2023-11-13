@@ -18,87 +18,87 @@ hex = "0.4"
 hex-literal = "0.3.4"
 
 [dependencies.dharitri-sc]
-version = "=0.0.1"
+version = "=0.1.5"
 features = ["dct-token-payment-legacy-decode"]
 
 [dependencies.dharitri-sc-modules]
-version = "=0.0.1"
+version = "=0.1.5"
 
 [dependencies.dharitri-sc-scenario]
-version = "=0.0.1"
+version = "=0.1.5"
 
 [dependencies.farm]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm-with-locked-rewards]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm-staking]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm-staking-proxy]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.pair]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.energy-factory]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.common_structs]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.mergeable]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.utils]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.energy-query]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.legacy_token_decode_module]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.lkmex-transfer]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.simple-lock]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm-boosted-yields]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.config]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.locking_module]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.farm_token]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.pausable]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
 
 [dependencies.sc_whitelist_module]
-git =  "https://github.com/Battula-anil-app-could/dx-exchange-sc"
-
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"

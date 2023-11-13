@@ -10,7 +10,5 @@ authors = [ "you",]
 [dependencies.farm-extra-rewards-wrapper]
 path = ".."
 
-[dependencies.dharitri-sc-modules]
-version = "=0.0.1"
 [dependencies.dharitri-sc-meta]
-version = "=0.0.1"
+version = "=0.1.5"

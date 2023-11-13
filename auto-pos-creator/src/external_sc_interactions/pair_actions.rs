@@ -2,6 +2,8 @@ use pair::{AddLiquidityResultType, RemoveLiquidityResultType};
 
 dharitri_sc::imports!();
 
+pub const MIN_AMOUNT_OUT: u32 = 1;
+
 pub struct PairAddLiqResult<M: ManagedTypeApi> {
     pub lp_tokens: DctTokenPayment<M>,
     pub first_tokens_remaining: DctTokenPayment<M>,
@@ -24,7 +26,6 @@ pub trait PairActionsModule:
         from_tokens: TokenIdentifier,
         from_amount: BigUint,
         to_tokens: TokenIdentifier,
-        min_amount_out: BigUint,
     ) -> DctTokenPayment {
         if from_tokens == to_tokens {
             return DctTokenPayment::new(from_tokens, 0, from_amount);
@@ -35,7 +36,7 @@ pub trait PairActionsModule:
             .unwrap_address();
         let payment = DctTokenPayment::new(from_tokens, 0, from_amount);
 
-        self.call_pair_swap(pair_address, payment, to_tokens, min_amount_out)
+        self.call_pair_swap(pair_address, payment, to_tokens)
     }
 
     fn call_pair_swap(
@@ -43,10 +44,9 @@ pub trait PairActionsModule:
         pair_address: ManagedAddress,
         input_tokens: DctTokenPayment,
         requested_token_id: TokenIdentifier,
-        min_amount_out: BigUint,
     ) -> DctTokenPayment {
         self.pair_proxy(pair_address)
-            .swap_tokens_fixed_input(requested_token_id, min_amount_out)
+            .swap_tokens_fixed_input(requested_token_id, MIN_AMOUNT_OUT)
             .with_dct_transfer(input_tokens)
             .execute_on_dest_context()
     }
@@ -56,14 +56,12 @@ pub trait PairActionsModule:
         pair_address: ManagedAddress,
         first_tokens: DctTokenPayment,
         second_tokens: DctTokenPayment,
-        first_token_min_amount_out: BigUint,
-        second_token_min_amount_out: BigUint,
     ) -> PairAddLiqResult<Self::Api> {
         let first_token_full_amount = first_tokens.amount.clone();
         let second_token_full_amount = second_tokens.amount.clone();
         let raw_results: AddLiquidityResultType<Self::Api> = self
             .pair_proxy(pair_address)
-            .add_liquidity(first_token_min_amount_out, second_token_min_amount_out)
+            .add_liquidity(MIN_AMOUNT_OUT, MIN_AMOUNT_OUT)
             .with_dct_transfer(first_tokens)
             .with_dct_transfer(second_tokens)
             .execute_on_dest_context();
@@ -94,12 +92,10 @@ pub trait PairActionsModule:
         &self,
         pair_address: ManagedAddress,
         lp_tokens: DctTokenPayment,
-        first_token_min_amount_out: BigUint,
-        second_token_min_amount_out: BigUint,
     ) -> PairRemoveLiqResult<Self::Api> {
         let raw_results: RemoveLiquidityResultType<Self::Api> = self
             .pair_proxy(pair_address)
-            .remove_liquidity(first_token_min_amount_out, second_token_min_amount_out)
+            .remove_liquidity(MIN_AMOUNT_OUT, MIN_AMOUNT_OUT)
             .with_dct_transfer(lp_tokens)
             .execute_on_dest_context();
         let (first_tokens, second_tokens) = raw_results.into_tuple();

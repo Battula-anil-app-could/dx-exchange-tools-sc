@@ -219,7 +219,7 @@ pub trait GenerateRewardsModule:
         let first_payment = DctTokenPayment::new(
             first_farm_token.clone(),
             first_attributes.farm_token_nonce,
-            first_attributes.current_token_amount,
+            first_attributes.current_token_amount.clone(),
         );
         underlying_farm_tokens.push(first_payment);
 

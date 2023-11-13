@@ -14,25 +14,21 @@ pub trait AutoPosCreator:
     + auto_farm::external_storage_read::farm_storage_read::FarmStorageReadModule
     + auto_farm::external_storage_read::metastaking_storage_read::MetastakingStorageReadModule
     + utils::UtilsModule
+    + configs::auto_farm_config::AutoFarmConfigModule
     + configs::pairs_config::PairsConfigModule
     + external_sc_interactions::pair_actions::PairActionsModule
     + external_sc_interactions::farm_actions::FarmActionsModule
     + external_sc_interactions::metastaking_actions::MetastakingActionsModule
-    + external_sc_interactions::moax_wrapper_actions::MoaxWrapperActionsModule
     + multi_contract_interactions::create_pos::CreatePosModule
-    + multi_contract_interactions::create_pos_endpoints::CreatePosEndpointsModule
     + multi_contract_interactions::exit_pos::ExitPosModule
-    + multi_contract_interactions::exit_pos_endpoints::ExitPosEndpointsModule
 {
+    /// Auto-farm SC is only used to read the farms and metastaking addresses from it.
+    /// This way, we don't need to duplicate the setup in this SC as well
     #[init]
-    fn init(&self, moax_wrapper_address: ManagedAddress, wmoax_token_id: TokenIdentifier) {
-        self.require_sc_address(&moax_wrapper_address);
-        self.require_valid_token_id(&wmoax_token_id);
+    fn init(&self, auto_farm_sc_address: ManagedAddress) {
+        self.require_sc_address(&auto_farm_sc_address);
 
-        self.moax_wrapper_sc_address().set(moax_wrapper_address);
-        self.wmoax_token_id().set(wmoax_token_id);
+        self.auto_farm_sc_address()
+            .set_if_empty(&auto_farm_sc_address);
     }
-
-    #[endpoint]
-    fn upgrade(&self) {}
 }

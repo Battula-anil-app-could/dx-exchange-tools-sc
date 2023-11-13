@@ -5,15 +5,12 @@
 ////////////////////////////////////////////////////
 
 // Init:                                 1
-// Endpoints:                           35
+// Endpoints:                           32
 // Async Callback:                       1
-// Total number of exported functions:  37
+// Total number of exported functions:  34
 
 #![no_std]
-
-// Configuration that works with rustc < 1.73.0.
-// TODO: Recommended rustc version: 1.73.0 or newer.
-#![feature(lang_items)]
+#![feature(alloc_error_handler, lang_items)]
 
 dharitri_sc_wasm_adapter::allocator!();
 dharitri_sc_wasm_adapter::panic_handler!();
@@ -21,43 +18,38 @@ dharitri_sc_wasm_adapter::panic_handler!();
 dharitri_sc_wasm_adapter::endpoints! {
     farm_extra_rewards_wrapper
     (
-        init => init
-        getRewardPerShare => reward_per_share
-        getRewardReserve => reward_reserve
-        allowExternalClaimBoostedRewards => allow_external_claim_boosted_rewards
-        getFarmingTokenId => farming_token_id
-        getRewardTokenId => reward_token_id
-        getPerBlockRewardAmount => per_block_reward_amount
-        getLastRewardBlockNonce => last_reward_block_nonce
-        getDivisionSafetyConstant => division_safety_constant
-        getUserTotalFarmPosition => user_total_farm_position
-        getFarmPositionMigrationNonce => farm_position_migration_nonce
-        registerFarmToken => register_farm_token
-        getFarmTokenId => farm_token
-        getFarmTokenSupply => farm_token_supply
-        addToPauseWhitelist => add_to_pause_whitelist
-        removeFromPauseWhitelist => remove_from_pause_whitelist
-        pause => pause
-        resume => resume
-        getState => state
-        addAdmin => add_admin_endpoint
-        removeAdmin => remove_admin_endpoint
-        updateOwnerOrAdmin => update_owner_or_admin_endpoint
-        getPermissions => permissions
-        depositRewardTokens => deposit_reward_tokens
-        withdrawRewardTokens => withdraw_reward_tokens
-        getRewardTokens => reward_tokens
-        getTokenAdditionBlock => token_addition_block
-        wrapFarmToken => wrap_farm_token_endpoint
-        claimRewards => claim_rewards
-        unwrapFarmToken => unwrap_farm_token
-        unwrapAndExitFarm => unwrap_and_exit_farm
-        addFarms => add_farms
-        removeFarms => remove_farms
-        getFarmForFarmToken => get_farm_for_farm_token_view
-        getFarmForFarmingToken => get_farm_for_farming_token_view
-        getFarmConfig => get_farm_config
+        getRewardPerShare
+        getRewardReserve
+        getFarmingTokenId
+        getRewardTokenId
+        getPerBlockRewardAmount
+        getLastRewardBlockNonce
+        getDivisionSafetyConstant
+        registerFarmToken
+        getFarmTokenId
+        getFarmTokenSupply
+        addToPauseWhitelist
+        removeFromPauseWhitelist
+        pause
+        resume
+        getState
+        addAdmin
+        removeAdmin
+        updateOwnerOrAdmin
+        getPermissions
+        depositRewardTokens
+        withdrawRewardTokens
+        getRewardTokens
+        getTokenAdditionBlock
+        wrapFarmToken
+        claimRewards
+        unwrapFarmToken
+        unwrapAndExitFarm
+        addFarms
+        removeFarms
+        getFarmForFarmToken
+        getFarmForFarmingToken
+        getFarmConfig
+        callBack
     )
 }
-
-dharitri_sc_wasm_adapter::async_callback! { farm_extra_rewards_wrapper }

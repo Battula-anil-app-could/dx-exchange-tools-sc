@@ -1,6 +1,5 @@
 use common_structs::PaymentsVec;
 use mergeable::Mergeable;
-use dharitri_sc::api::HandleConstraints;
 use dharitri_sc::api::{SendApi, SendApiImpl};
 
 dharitri_sc::imports!();
@@ -58,11 +57,11 @@ where
         }
 
         let _ = M::send_api_impl().multi_transfer_dct_nft_execute(
-            address.get_handle().get_raw_handle(),
-            self.payments.get_handle().get_raw_handle(),
+            address.get_raw_handle(),
+            self.payments.get_raw_handle(),
             0,
-            ManagedBuffer::<M>::new().get_handle().get_raw_handle(),
-            ManagedArgBuffer::<M>::new().get_handle().get_raw_handle(),
+            ManagedBuffer::<M>::new().get_raw_handle(),
+            ManagedArgBuffer::<M>::new().get_raw_handle(),
         );
     }
 }

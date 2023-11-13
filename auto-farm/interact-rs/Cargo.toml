@@ -1,0 +1,19 @@
+[[bin]]
+name = "rust-interact"
+path = "src/interact.rs"
+
+[package]
+name = "rust-interact"
+version = "0.0.0"
+authors = ["you"]
+edition = "2021"
+publish = false
+[dependencies.auto-farm]
+path = ".."
+
+[dependencies.dharitri-sc-snippets]
+version = "0.1.5"
+
+[dependencies.energy-query]
+git = "https://github.com/Battula-anil-app-could/dx-exchange-sc"
+rev = "fe2ad45"
